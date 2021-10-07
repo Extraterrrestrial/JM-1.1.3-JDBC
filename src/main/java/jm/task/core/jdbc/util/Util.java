@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Util {
-    //   реализуйте настройку соединения с БД
+    //    реализуйте настройку соединения с БД
     public static final String DRIVER="com.mysql.cj.jdbc.Driver";
     private static final String HOST = "jdbc:mysql://localhost:3306/test?useSSL=false&allowMultiQueries=true&serverTimezone=UTC";
     private static final String LOGIN = "root";
