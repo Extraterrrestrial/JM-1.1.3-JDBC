@@ -10,7 +10,7 @@ import java.util.List;
 public class UserDaoJDBCImpl implements UserDao {
     private final Connection connection = Util.getConnection();
 
-    private final String CREATE_TABLE = "CREATE TABLE `test`.`users` " +
+    private final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS `test`.`users` " +
             "(`id` BIGINT NOT NULL AUTO_INCREMENT," +
             " `name` VARCHAR(45) NOT NULL," +
             " `lastName` VARCHAR(45) NOT NULL," +
@@ -21,7 +21,6 @@ public class UserDaoJDBCImpl implements UserDao {
     private final String SAVE_NEW_USER = "INSERT INTO test.users (name, lastName, age) VALUES (?, ?, ?)";
     private final String GET_ALL_USERS = "SELECT * FROM test.users";
     private final String CLEAR_TABLE = "DELETE FROM test.users";
-    //    private final String DELETE_USER_BY_ID = "DELETE FROM users WHERE id = ?";
     private final String DELETE_USER_BY_ID = "DELETE FROM test.users WHERE id";
 
     public UserDaoJDBCImpl() {
