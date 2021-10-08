@@ -11,7 +11,7 @@ import java.util.List;
 public class UserDaoJDBCImpl implements UserDao {
     private final Connection connection = Util.getConnection();
 
-    private final String CREATE_TABLE = "CREATE TABLE `mydbtest`.`users` " +
+    private final String CREATE_TABLE = "CREATE TABLE `test`.`users` " +
             "(`id` BIGINT NOT NULL AUTO_INCREMENT," +
             " `name` VARCHAR(45) NOT NULL," +
             " `lastName` VARCHAR(45) NOT NULL," +
