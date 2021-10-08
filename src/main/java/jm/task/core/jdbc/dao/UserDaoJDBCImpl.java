@@ -35,11 +35,15 @@ public class UserDaoJDBCImpl implements UserDao {
         } catch (SQLException e){
             e.printStackTrace();
         }
-
     }
 
     public void dropUsersTable() {
-
+        try (Statement statement = connection.createStatement()){
+            statement.executeUpdate(DELETE_TABLE);
+            System.out.println("Таблица удалена");
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     public void saveUser(String name, String lastName, byte age) {
