@@ -21,7 +21,7 @@ public class UserDaoJDBCImpl implements UserDao {
     private final String SAVE_NEW_USER = "INSERT INTO test.users (name, lastName, age) VALUES (?, ?, ?)";
     private final String GET_ALL_USERS = "SELECT * FROM test.users";
     private final String CLEAR_TABLE = "DELETE FROM test.users";
-//    private final String DELETE_USER_BY_ID = "DELETE FROM users WHERE id = ?";
+    //    private final String DELETE_USER_BY_ID = "DELETE FROM users WHERE id = ?";
     private final String DELETE_USER_BY_ID = "DELETE FROM test.users WHERE id";
 
     public UserDaoJDBCImpl() {
@@ -34,6 +34,7 @@ public class UserDaoJDBCImpl implements UserDao {
             System.out.println("Таблица создана");
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("Не удалось создать таблицу SQL запросом: " + CREATE_TABLE);
         }
     }
 
@@ -55,20 +56,21 @@ public class UserDaoJDBCImpl implements UserDao {
             System.out.println("User с именем – " + name + " добавлен в базу данных");
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("Не удалось добавить в базу Юзера с именем – " + name);
         }
     }
 
     public void removeUserById(long id) {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(DELETE_USER_BY_ID);
-            System.out.println("User id:"+ id +" удален");
+            System.out.println("User id:" + id + " удален");
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("Не удалось удалить юзера id:" + id);
         }
     }
 
-    public List<User> getAllUsers()
-    {
+    public List<User> getAllUsers() {
         List<User> allUser = new ArrayList<>();
         try (Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(GET_ALL_USERS);
@@ -83,13 +85,21 @@ public class UserDaoJDBCImpl implements UserDao {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Не удалось получить всех юзеров");
+
         }
         return allUser;
-
-//        return null;
     }
 
     public void cleanUsersTable() {
+//        String sql = "DELETE FROM test.users";
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate(CLEAR_TABLE);
+            System.out.println("Таблица очищена");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Не удалось очистить");
+        }
 
     }
 }
