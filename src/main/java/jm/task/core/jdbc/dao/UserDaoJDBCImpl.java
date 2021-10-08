@@ -3,9 +3,8 @@ package jm.task.core.jdbc.dao;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
@@ -18,44 +17,79 @@ public class UserDaoJDBCImpl implements UserDao {
             " `age` TINYINT NOT NULL," +
             " PRIMARY KEY (`id`))";
 
-    private final String DELETE_TABLE = "DROP TABLE IF EXISTS users";
-    private final String SAVE_NEW_USER = "INSERT INTO users (name, lastName, age) VALUES (?, ?, ?)";
-    private final String GET_ALL_USERS = "SELECT * FROM users";
-    private final String CLEAR_TABLE = "DELETE FROM users";
-    private final String DELETE_USER_BY_ID = "DELETE FROM users WHERE id = ?";
+    private final String DELETE_TABLE = "DROP TABLE IF EXISTS test.users";
+    private final String SAVE_NEW_USER = "INSERT INTO test.users (name, lastName, age) VALUES (?, ?, ?)";
+    private final String GET_ALL_USERS = "SELECT * FROM test.users";
+    private final String CLEAR_TABLE = "DELETE FROM test.users";
+//    private final String DELETE_USER_BY_ID = "DELETE FROM users WHERE id = ?";
+    private final String DELETE_USER_BY_ID = "DELETE FROM test.users WHERE id";
 
     public UserDaoJDBCImpl() {
 
     }
 
     public void createUsersTable() {
-        try (Statement statement = connection.createStatement()){
+        try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(CREATE_TABLE);
             System.out.println("Таблица создана");
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void dropUsersTable() {
-        try (Statement statement = connection.createStatement()){
+        try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(DELETE_TABLE);
             System.out.println("Таблица удалена");
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void saveUser(String name, String lastName, byte age) {
-
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SAVE_NEW_USER)) {
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setByte(3, age);
+            preparedStatement.executeUpdate();
+            System.out.println("User с именем – " + name + " добавлен в базу данных");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void removeUserById(long id) {
-
+        try (Statement statement = connection.createStatement()) {
+//            String sql = "DELETE FROM test.users WHERE id";
+            statement.executeUpdate(DELETE_USER_BY_ID);
+            System.out.println("User id:"+ id +" удален");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public List<User> getAllUsers() {
-        return null;
+    public List<User> getAllUsers()
+    {
+        List<User> allUser = new ArrayList<>();
+//        String sql = "SELECT id, name, lastName, age FROM test.users";
+
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(GET_ALL_USERS);
+            System.out.println("Все пользователи получены");
+            while (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getLong("id"));
+                user.setName(resultSet.getString("name"));
+                user.setLastName(resultSet.getString("lastName"));
+                user.setAge(resultSet.getByte("age"));
+                allUser.add(user);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return allUser;
+
+//        return null;
     }
 
     public void cleanUsersTable() {
