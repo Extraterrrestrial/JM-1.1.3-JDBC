@@ -12,7 +12,6 @@ public class Main {
     private static final User user4 = new User("Alex", "Alexandroff", (byte) 55);
 
     public static void main(String[] args) {
-        // реализуйте алгоритм здесь
         userService.createUsersTable();
         userService.saveUser(user1.getName(), user1.getLastName(), user1.getAge());
         userService.saveUser(user2.getName(), user2.getLastName(), user2.getAge());
